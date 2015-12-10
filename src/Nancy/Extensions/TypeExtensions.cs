@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    
+
     /// <summary>
     /// Containing extensions for the <see cref="Type"/> object.
     /// </summary>
@@ -17,12 +17,12 @@
         /// <param name="nonPublic"><see langword="true"/> if a non-public constructor can be used, otherwise <see langword="false"/>.</param>
         public static T CreateInstance<T>(this Type type, bool nonPublic = false)
         {
-            if (!typeof(T).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo()))
+            try
             {
-                throw new InvalidOperationException("Unable to create instance of " + type.GetTypeInfo().FullName + "since it can't be cast to " + typeof(T).GetTypeInfo().FullName);
-            }
-
+                var assemblyUri = new Uri(source.Assembly.EscapedCodeBase);
             return (T)CreateInstance(type, nonPublic);
+            }
+            catch { return string.Empty; }
         }
 
         /// <summary>
@@ -207,7 +207,7 @@
                 return GetTypeCode(Enum.GetUnderlyingType(type));
             else
                 return TypeCode.Object;
-        }
+    }
 
         private static object CreateInstanceInternal(Type type, bool nonPublic = false)
         {
