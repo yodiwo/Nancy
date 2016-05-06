@@ -16,10 +16,12 @@
         /// <returns>A string containing the path of the assembly that contains the type.</returns>
         public static string GetAssemblyPath(this Type source)
         {
-            var assemblyUri =
-                new Uri(source.Assembly.EscapedCodeBase);
-
-            return assemblyUri.LocalPath;
+            try
+            {
+                var assemblyUri = new Uri(source.Assembly.EscapedCodeBase);
+                return assemblyUri.LocalPath;
+            }
+            catch { return string.Empty; }
         }
 
         /// <summary>

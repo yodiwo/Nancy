@@ -49,8 +49,12 @@ namespace Nancy.Bootstrapper
             x => x == nancyAssembly,
             x =>
             {
-                return !x.GetName().Name.StartsWith("Nancy.Testing",StringComparison.OrdinalIgnoreCase) &&
-                    x.GetReferencedAssemblies().Any(r => r.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase));
+                try
+                {
+                    return !x.GetName().Name.StartsWith("Nancy.Testing",StringComparison.OrdinalIgnoreCase) &&
+                            x.GetReferencedAssemblies().Any(r => r.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase));
+                }
+                catch { return false; }
             }
         };
 
@@ -221,43 +225,44 @@ namespace Nancy.Bootstrapper
 
             UpdateAssemblies();
 
-            var existingAssemblyPaths =
-                assemblies.Select(a => a.Location).ToArray();
+            var existingAssemblyPaths = assemblies.Select(a => { try { return a.Location; } catch { return null; } })
+                                                  .ToArray();
 
             foreach (var directory in GetAssemblyDirectories())
-            {
-                var unloadedAssemblies = Directory
-                    .GetFiles(directory, "*.dll")
-                    .Where(f => !existingAssemblyPaths.Contains(f, StringComparer.OrdinalIgnoreCase)).ToArray();
-
-                foreach (var unloadedAssembly in unloadedAssemblies)
+                if (!string.IsNullOrEmpty(directory))
                 {
-                    Assembly inspectedAssembly = null;
-                    try
-                    {
-                        inspectedAssembly = Assembly.ReflectionOnlyLoadFrom(unloadedAssembly);
-                    }
-                    catch (BadImageFormatException biEx)
-                    {
-                        //the assembly maybe it's not managed code
-                    }
-                    catch (FileLoadException)
-                    {
-                        //the assembly might already be loaded
-                    }
+                    var unloadedAssemblies = Directory
+                        .GetFiles(directory, "*.dll")
+                        .Where(f => !existingAssemblyPaths.Contains(f, StringComparer.OrdinalIgnoreCase)).ToArray();
 
-                    if (inspectedAssembly != null && inspectedAssembly.GetReferencedAssemblies().Any(r => r.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase)))
+                    foreach (var unloadedAssembly in unloadedAssemblies)
                     {
+                        Assembly inspectedAssembly = null;
                         try
                         {
-                            Assembly.Load(inspectedAssembly.GetName());
+                            inspectedAssembly = Assembly.ReflectionOnlyLoadFrom(unloadedAssembly);
                         }
-                        catch
+                        catch (BadImageFormatException biEx)
                         {
+                            //the assembly maybe it's not managed code
+                        }
+                        catch (FileLoadException)
+                        {
+                            //the assembly might already be loaded
+                        }
+
+                        if (inspectedAssembly != null && inspectedAssembly.GetReferencedAssemblies().Any(r => r.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase)))
+                        {
+                            try
+                            {
+                                Assembly.Load(inspectedAssembly.GetName());
+                            }
+                            catch
+                            {
+                            }
                         }
                     }
                 }
-            }
 
             UpdateTypes();
 
