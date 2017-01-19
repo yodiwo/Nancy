@@ -430,9 +430,9 @@ namespace Nancy.Testing.Tests
                 with.FormsAuth(userId, formsAuthConfig);
             });
 
-            var cookie = response.Cookies.Single(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName);
+            var cookie = response.Cookies.Single(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName(formsAuthConfig));
             var cookieValue = HttpUtility.UrlDecode(cookie.Value);
-            
+
             //Then
             cookieValue.ShouldEqual(cookieContents);
         }
@@ -531,14 +531,14 @@ namespace Nancy.Testing.Tests
             // When
             var result = browser.Get("/useragent", with =>
             {
-                with.Header("User-Agent", expectedHeaderValue);    
+                with.Header("User-Agent", expectedHeaderValue);
             });
 
             var header = result.Body.AsString();
 
             // Then
             header.ShouldEqual(expectedHeaderValue);
-        }     
+        }
 
         public class EchoModel
         {
@@ -556,14 +556,14 @@ namespace Nancy.Testing.Tests
                     {
                         var body = new StreamReader(this.Context.Request.Body).ReadToEnd();
                         return new Response
-                                {
-                                    Contents = stream =>
-                                                {
-                                                    var writer = new StreamWriter(stream);
-                                                    writer.Write(body);
-                                                    writer.Flush();
-                                                }
-                                };
+                        {
+                            Contents = stream =>
+                                        {
+                                            var writer = new StreamWriter(stream);
+                                            writer.Write(body);
+                                            writer.Flush();
+                                        }
+                        };
                     };
 
                 Get["/cookie"] = ctx =>
@@ -605,7 +605,7 @@ namespace Nancy.Testing.Tests
                 Get["/type"] = _ => this.Request.Url.Scheme.ToLower();
 
                 Get["/ajax"] = _ => this.Request.IsAjaxRequest() ? "ajax" : "not-ajax";
- 
+
                 Post["/encoded"] = parameters => (string)this.Request.Form.name;
 
                 Post["/encodedquerystring"] = parameters => (string)this.Request.Query.name;

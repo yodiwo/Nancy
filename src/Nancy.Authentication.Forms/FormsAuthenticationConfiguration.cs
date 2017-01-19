@@ -102,5 +102,10 @@ namespace Nancy.Authentication.Forms
                 return true;
             }
         }
+
+        /// <summary>
+        /// Specify authentication cookie name. If not specify the default will be used
+        /// </summary>
+        public string AuthenticationCookieName { get; set; }
     }
 }
