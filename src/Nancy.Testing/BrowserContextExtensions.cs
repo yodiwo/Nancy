@@ -168,7 +168,7 @@
 
             var cookieContents = String.Format("{1}{0}", encryptedId, hmacString);
 
-            Cookie(browserContext, FormsAuthentication.FormsAuthenticationCookieName, cookieContents);
+            Cookie(browserContext, FormsAuthentication.FormsAuthenticationCookieName(formsAuthenticationConfiguration), cookieContents);
         }
 
         public static void Accept(this BrowserContext browserContext, MediaRange mediaRange)

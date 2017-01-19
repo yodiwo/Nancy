@@ -19,19 +19,12 @@ namespace Nancy.Authentication.Forms
         private static FormsAuthenticationConfiguration currentConfiguration;
 
         /// <summary>
-        /// Gets or sets the forms authentication cookie name
+        /// Gets the forms authentication cookie name
         /// </summary>
-        public static string FormsAuthenticationCookieName
+        public static string FormsAuthenticationCookieName(FormsAuthenticationConfiguration configuration)
         {
-            get
-            {
-                return formsAuthenticationCookieName;
-            }
-
-            set
-            {
-                formsAuthenticationCookieName = value;
-            }
+            return configuration != null && !String.IsNullOrEmpty(configuration.AuthenticationCookieName) && !String.IsNullOrWhiteSpace(configuration.AuthenticationCookieName) ?
+            configuration.AuthenticationCookieName : formsAuthenticationCookieName;
         }
 
         /// <summary>
@@ -244,12 +237,11 @@ namespace Nancy.Authentication.Forms
         private static Guid GetAuthenticatedUserFromCookie(NancyContext context, FormsAuthenticationConfiguration configuration)
         {
             string cookieValueEncrypted;
-            if (!context.Request.Cookies.TryGetValue(formsAuthenticationCookieName, out cookieValueEncrypted))
+            if (!context.Request.Cookies.TryGetValue(FormsAuthenticationCookieName(currentConfiguration), out cookieValueEncrypted))
             {
                 return Guid.Empty;
             }
 
-            if (string.IsNullOrEmpty(cookieValueEncrypted))
             {
                 return Guid.Empty;
             }
@@ -276,7 +268,7 @@ namespace Nancy.Authentication.Forms
         {
             var cookieContents = EncryptAndSignCookie(userIdentifier.ToString(), configuration);
 
-            var cookie = new NancyCookie(formsAuthenticationCookieName, cookieContents, true, configuration.RequiresSSL, cookieExpiry);
+            var cookie = new NancyCookie(FormsAuthenticationCookieName(currentConfiguration), cookieContents, true, configuration.RequiresSSL, cookieExpiry);
 
             if (!string.IsNullOrEmpty(configuration.Domain))
             {
@@ -298,7 +290,7 @@ namespace Nancy.Authentication.Forms
         /// <returns>Nancy cookie instance</returns>
         private static INancyCookie BuildLogoutCookie(FormsAuthenticationConfiguration configuration)
         {
-            var cookie = new NancyCookie(formsAuthenticationCookieName, String.Empty, true, configuration.RequiresSSL, DateTime.Now.AddDays(-1));
+            var cookie = new NancyCookie(FormsAuthenticationCookieName(currentConfiguration), String.Empty, true, configuration.RequiresSSL, DateTime.Now.AddDays(-1));
 
             if (!string.IsNullOrEmpty(configuration.Domain))
             {

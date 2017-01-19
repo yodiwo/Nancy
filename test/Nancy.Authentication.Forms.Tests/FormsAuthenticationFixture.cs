@@ -74,11 +74,11 @@ namespace Nancy.Authentication.Forms.Tests
             };
 
             this.context = new NancyContext
-                               {
-                                    Request = new Request(
+            {
+                Request = new Request(
                                                     "GET",
                                                     new Url { Scheme = "http", BasePath = "/testing", HostName = "test.com", Path = "test" })
-                               };
+            };
 
             this.userGuid = new Guid("3D97EB33-824A-4173-A2C1-633AC16C1010");
         }
@@ -168,7 +168,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
 
-            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).Any().ShouldBeTrue();
+            result.Cookies.Where(c => c.Name == this.config.AuthenticationCookieName).Any().ShouldBeTrue();
         }
 
         [Fact]
@@ -181,7 +181,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.UserLoggedInResponse(userGuid);
 
             // Then
-            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).Any().ShouldBeTrue();
+            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName(this.config)).Any().ShouldBeTrue();
         }
 
         [Fact]
@@ -194,7 +194,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
 
             //Then
-            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
+            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName(this.config)).First()
                 .HttpOnly.ShouldBeTrue();
         }
 
@@ -208,7 +208,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.UserLoggedInResponse(userGuid);
 
             // Then
-            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
+            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName(this.config)).First()
                 .HttpOnly.ShouldBeTrue();
         }
 
@@ -219,7 +219,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
 
-            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
+            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName(this.config)).First()
                 .Expires.ShouldBeNull();
         }
 
@@ -233,7 +233,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.UserLoggedInResponse(userGuid);
 
             // Then
-            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
+            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName(this.config)).First()
                 .Expires.ShouldBeNull();
         }
 
@@ -244,7 +244,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid, DateTime.Now.AddDays(1));
 
-            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
+            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName(this.config)).First()
                 .Expires.ShouldNotBeNull();
         }
 
@@ -258,7 +258,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.UserLoggedInResponse(userGuid, DateTime.Now.AddDays(1));
 
             // Then
-            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
+            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName(this.config)).First()
                 .Expires.ShouldNotBeNull();
         }
 
@@ -360,7 +360,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             var result = FormsAuthentication.LogOutAndRedirectResponse(context, "/");
 
-            var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First();
+            var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName(this.config)).First();
             cookie.Value.ShouldBeEmpty();
             cookie.Expires.ShouldNotBeNull();
             (cookie.Expires < DateTime.Now).ShouldBeTrue();
@@ -376,7 +376,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.LogOutResponse();
 
             // Then
-            var cookie = result.Cookies.First(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName);
+            var cookie = result.Cookies.First(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName(this.config));
             cookie.Value.ShouldBeEmpty();
             cookie.Expires.ShouldNotBeNull();
             (cookie.Expires < DateTime.Now).ShouldBeTrue();
@@ -389,7 +389,7 @@ namespace Nancy.Authentication.Forms.Tests
             var mockMapper = A.Fake<IUserMapper>();
             this.config.UserMapper = mockMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
-            this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.validCookieValue);
+            this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName(this.config), this.validCookieValue);
 
             fakePipelines.BeforeRequest.Invoke(this.context, new CancellationToken());
 
@@ -406,7 +406,7 @@ namespace Nancy.Authentication.Forms.Tests
             A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid, this.context)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
-            this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.validCookieValue);
+            this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName(this.config), this.validCookieValue);
 
             var result = fakePipelines.BeforeRequest.Invoke(this.context, new CancellationToken());
 
@@ -422,7 +422,7 @@ namespace Nancy.Authentication.Forms.Tests
             A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid, this.context)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
-            this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, string.Empty);
+            this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName(this.config), string.Empty);
 
             var result = fakePipelines.BeforeRequest.Invoke(this.context, new CancellationToken());
 
@@ -438,7 +438,7 @@ namespace Nancy.Authentication.Forms.Tests
             A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid, this.context)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
-            this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.cookieWithInvalidHmac);
+            this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName(this.config), this.cookieWithInvalidHmac);
 
             var result = fakePipelines.BeforeRequest.Invoke(this.context, new CancellationToken());
 
@@ -454,7 +454,7 @@ namespace Nancy.Authentication.Forms.Tests
             A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid, this.context)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
-            this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.cookieWithEmptyHmac);
+            this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName(this.config), this.cookieWithEmptyHmac);
 
             var result = fakePipelines.BeforeRequest.Invoke(this.context, new CancellationToken());
 
@@ -470,7 +470,7 @@ namespace Nancy.Authentication.Forms.Tests
             A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid, this.context)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
-            this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.cookieWithNoHmac);
+            this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName(this.config), this.cookieWithNoHmac);
 
             var result = fakePipelines.BeforeRequest.Invoke(this.context, new CancellationToken());
 
@@ -486,7 +486,7 @@ namespace Nancy.Authentication.Forms.Tests
             A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid, this.context)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
-            this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.cookieWithBrokenEncryptedData);
+            this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName(this.config), this.cookieWithBrokenEncryptedData);
 
             var result = fakePipelines.BeforeRequest.Invoke(this.context, new CancellationToken());
 
@@ -609,7 +609,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             //Then
             result.Cookies
-                    .Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName)
+                    .Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName(this.config))
                     .First()
                     .Secure.ShouldBeTrue();
         }
@@ -625,7 +625,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             // Then
             result.Cookies
-                    .Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName)
+                    .Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName(this.config))
                     .First()
                     .Secure.ShouldBeTrue();
         }
@@ -637,7 +637,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             var result = FormsAuthentication.LogOutAndRedirectResponse(context, "/");
 
-            var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First();
+            var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName(this.config)).First();
             cookie.Secure.ShouldBeTrue();
         }
 
@@ -651,7 +651,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.LogOutResponse();
 
             // Then
-            var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First();
+            var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName(this.config)).First();
             cookie.Secure.ShouldBeTrue();
         }
 
@@ -674,7 +674,7 @@ namespace Nancy.Authentication.Forms.Tests
             FormsAuthentication.Enable(A.Fake<IPipelines>(), this.config);
             context.Request.Query[config.RedirectQuerystringKey] = "http://moo.com/";
 
-            var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid, fallbackRedirectUrl:"/moo");
+            var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid, fallbackRedirectUrl: "/moo");
 
             result.ShouldBeOfType(typeof(Response));
             result.StatusCode.ShouldEqual(HttpStatusCode.SeeOther);
@@ -704,7 +704,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
 
             //Then
-            var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First();
+            var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName(this.config)).First();
             cookie.Domain.ShouldEqual(domain);
         }
 
@@ -718,7 +718,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
 
             //Then
-            var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First();
+            var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName(this.config)).First();
             cookie.Path.ShouldEqual(path);
         }
 

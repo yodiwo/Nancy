@@ -99,5 +99,10 @@ namespace Nancy.Authentication.Forms
                 throw new InvalidOperationException("CryptographyConfiguration HmacProvider cannot be null.");
             }
         }
+
+        /// <summary>
+        /// Specify authentication cookie name. If not specify the default will be used
+        /// </summary>
+        public string AuthenticationCookieName { get; set; }
     }
 }
