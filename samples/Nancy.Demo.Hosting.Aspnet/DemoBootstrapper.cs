@@ -64,6 +64,8 @@
             base.ApplicationStartup(container, pipelines);
 
             Csrf.Enable(pipelines);
+            // change csrf key
+            CsrfToken.SetCSRFKey("test_csrf");
 
             this.Conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("moo", "Content"));
 
