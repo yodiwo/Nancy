@@ -431,9 +431,8 @@ namespace Nancy.Testing.Tests
                     with.FormsAuth(userId, formsAuthConfig);
                 });
 
-            var cookie = response.Cookies.Single(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName);
-            var cookieValue = cookie.Value;
-
+            var cookie = response.Cookies.Single(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName(formsAuthConfig));
+            var cookieValue = HttpUtility.UrlDecode(cookie.Value);
             //Then
             cookieValue.ShouldEqual(cookieContents);
         }
