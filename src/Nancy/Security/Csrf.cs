@@ -184,6 +184,10 @@
         {
             var parsed = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
+            //decode
+            if (cookieTokenString.Contains('%'))
+                cookieTokenString = HttpUtility.UrlDecode(cookieTokenString);
+
             var currentKey = string.Empty;
             var buffer = new StringBuilder();
 
