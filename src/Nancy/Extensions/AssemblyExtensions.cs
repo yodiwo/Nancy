@@ -31,12 +31,18 @@ namespace Nancy.Extensions
             {
                 types = ArrayCache.Empty<Type>();
             }
-            catch (FileLoadException) {
+            catch (FileLoadException)
+            {
                 // probably assembly version conflict
-                types = ArrayCache.Empty<Type>();
+                types = new Type[] { };
+            }
+            catch (Exception ex)
+            {
+               //Console.WriteLine("Nancy Exception in SafeGetExportedTypes(). Message : " + ex.Message + Environment.NewLine + "Path = " + assembly.Location + Environment.NewLine + "Name:" + assembly.FullName);
+                types = new Type[] { };
             }
             return types;
-        }
+            }
 
 #if !CORE
         /// <summary>
