@@ -17,7 +17,7 @@
         // to enable the diagnostics dashboard
         protected override DiagnosticsConfiguration DiagnosticsConfiguration
         {
-            get { return new DiagnosticsConfiguration { Password = "password"}; }
+            get { return new DiagnosticsConfiguration { Password = "password" }; }
         }
 
         // Overriding this just to show how it works, not actually necessary as autoregister
@@ -51,6 +51,8 @@
             StaticConfiguration.EnableRequestTracing = true;
             StaticConfiguration.DisableErrorTraces = false;
             Csrf.Enable(pipelines);
+            // change csrf key
+            CsrfToken.SetCSRFKey("test_csrf");
 
             this.Conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("moo", "Content"));
 
