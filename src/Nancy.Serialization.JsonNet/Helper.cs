@@ -24,7 +24,7 @@
                 return false;
             }
 
-            return contentType.Matches("application/json") || contentType.Matches("text/json") || contentType.Matches("application/vnd") || contentType.Matches("+json");
+            return contentType.Matches("application/json") || contentType.Matches("text/json") || contentType.Matches("application/vnd");
 
         }
     }
