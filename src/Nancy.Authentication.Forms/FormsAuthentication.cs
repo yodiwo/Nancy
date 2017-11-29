@@ -136,7 +136,7 @@ namespace Nancy.Authentication.Forms
         /// <returns>Nancy response with status <see cref="HttpStatusCode.OK"/></returns>
         public static Response UserLoggedInResponse(Guid userIdentifier, DateTime? cookieExpiry = null)
         {
-            var response =(Response)HttpStatusCode.OK;
+            var response = (Response)HttpStatusCode.OK;
 
             var authenticationCookie = BuildCookie(userIdentifier, cookieExpiry, currentConfiguration);
 
@@ -234,12 +234,13 @@ namespace Nancy.Authentication.Forms
         /// <returns>Returns user guid, or Guid.Empty if not present or invalid</returns>
         private static Guid GetAuthenticatedUserFromCookie(NancyContext context, FormsAuthenticationConfiguration configuration)
         {
-            if (!context.Request.Cookies.ContainsKey(FormsAuthenticationCookieName(currentConfiguration)))
+            string cookieName = FormsAuthenticationCookieName(currentConfiguration);
+            if (!context.Request.Cookies.ContainsKey(cookieName))
             {
                 return Guid.Empty;
             }
 
-            var cookieValueEncrypted = context.Request.Cookies[formsAuthenticationCookieName];
+            var cookieValueEncrypted = context.Request.Cookies[cookieName];
 
             if (string.IsNullOrEmpty(cookieValueEncrypted))
             {
