@@ -1,4 +1,4 @@
-#if CORE
+//#if CORE
 namespace Nancy
 {
     using System;
@@ -45,16 +45,17 @@ namespace Nancy
                 typeof (DependencyContextAssemblyCatalog).GetTypeInfo().Assembly
             };
 
-            foreach (var library in this.dependencyContext.RuntimeLibraries)
-            {
-                if (IsReferencingNancy(library))
+            if (this.dependencyContext != null)
+                foreach (var library in this.dependencyContext.RuntimeLibraries)
                 {
-                    foreach (var assemblyName in library.GetDefaultAssemblyNames(this.dependencyContext))
+                    if (IsReferencingNancy(library))
                     {
-                        results.Add(SafeLoadAssembly(assemblyName));
+                        foreach (var assemblyName in library.GetDefaultAssemblyNames(this.dependencyContext))
+                        {
+                            results.Add(SafeLoadAssembly(assemblyName));
+                        }
                     }
                 }
-            }
 
             return results.ToArray();
         }
@@ -77,4 +78,4 @@ namespace Nancy
         }
     }
 }
-#endif
+//#endif
