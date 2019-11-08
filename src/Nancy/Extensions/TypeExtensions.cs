@@ -19,10 +19,10 @@
         {
             try
             {
-                var assemblyUri = new Uri(source.Assembly.EscapedCodeBase);
-            return (T)CreateInstance(type, nonPublic);
+                var assemblyUri = new Uri(type.Assembly.EscapedCodeBase);
+                return (T)CreateInstance(type, nonPublic);
             }
-            catch { return string.Empty; }
+            catch { return default(T); }
         }
 
         /// <summary>
@@ -207,7 +207,7 @@
                 return GetTypeCode(Enum.GetUnderlyingType(type));
             else
                 return TypeCode.Object;
-    }
+        }
 
         private static object CreateInstanceInternal(Type type, bool nonPublic = false)
         {
