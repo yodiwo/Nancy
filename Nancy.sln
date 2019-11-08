@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5734E9DC-CF67-4337-B28E-695280598B88}"
 	ProjectSection(SolutionItems) = preProject
@@ -94,6 +94,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Demo.Hosting.Kestrel", "samples\Nancy.Demo.Hosting.Kestrel\Nancy.Demo.Hosting.Kestrel.csproj", "{3AF8D59E-D10A-46DE-97A6-0A6C156F22CD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.ViewEngines.Spark.Tests", "test\Nancy.ViewEngines.Spark.Tests\Nancy.ViewEngines.Spark.Tests.csproj", "{08C1D823-E8E1-4D86-8F73-A9F3AE8FEFC7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nancy.Serialization.JsonNet", "src\Nancy.Serialization.JsonNet\Nancy.Serialization.JsonNet.csproj", "{E09A0523-1D1C-4303-A776-DB4443DBE94C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -561,6 +563,18 @@ Global
 		{08C1D823-E8E1-4D86-8F73-A9F3AE8FEFC7}.Release|x64.Build.0 = Release|Any CPU
 		{08C1D823-E8E1-4D86-8F73-A9F3AE8FEFC7}.Release|x86.ActiveCfg = Release|Any CPU
 		{08C1D823-E8E1-4D86-8F73-A9F3AE8FEFC7}.Release|x86.Build.0 = Release|Any CPU
+		{E09A0523-1D1C-4303-A776-DB4443DBE94C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E09A0523-1D1C-4303-A776-DB4443DBE94C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E09A0523-1D1C-4303-A776-DB4443DBE94C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E09A0523-1D1C-4303-A776-DB4443DBE94C}.Debug|x64.Build.0 = Debug|Any CPU
+		{E09A0523-1D1C-4303-A776-DB4443DBE94C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E09A0523-1D1C-4303-A776-DB4443DBE94C}.Debug|x86.Build.0 = Debug|Any CPU
+		{E09A0523-1D1C-4303-A776-DB4443DBE94C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E09A0523-1D1C-4303-A776-DB4443DBE94C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E09A0523-1D1C-4303-A776-DB4443DBE94C}.Release|x64.ActiveCfg = Release|Any CPU
+		{E09A0523-1D1C-4303-A776-DB4443DBE94C}.Release|x64.Build.0 = Release|Any CPU
+		{E09A0523-1D1C-4303-A776-DB4443DBE94C}.Release|x86.ActiveCfg = Release|Any CPU
+		{E09A0523-1D1C-4303-A776-DB4443DBE94C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -604,6 +618,7 @@ Global
 		{EEEE504F-24AC-4932-9B28-F684AB20FB50} = {5734E9DC-CF67-4337-B28E-695280598B88}
 		{3AF8D59E-D10A-46DE-97A6-0A6C156F22CD} = {AA791E28-7914-439A-B59A-580B8D8FE95D}
 		{08C1D823-E8E1-4D86-8F73-A9F3AE8FEFC7} = {058BCE2A-8F81-4404-83D3-844CE030E513}
+		{E09A0523-1D1C-4303-A776-DB4443DBE94C} = {5734E9DC-CF67-4337-B28E-695280598B88}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {781C77FF-8818-4AF3-BCAF-C82B52FFF0C0}

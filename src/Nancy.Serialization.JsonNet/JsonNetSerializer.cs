@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.IO;
     using Nancy.IO;
+    using Nancy.Responses.Negotiation;
     using Newtonsoft.Json;
 
     public class JsonNetSerializer : ISerializer
@@ -57,8 +58,11 @@
         {
             using (var writer = new JsonTextWriter(new StreamWriter(new UnclosableStreamWrapper(outputStream))))
             {
-                this.serializer.Serialize(writer, model);               
+                this.serializer.Serialize(writer, model);
             }
         }
+
+        public bool CanSerialize(MediaRange mediaRange) => Helpers.IsJsonType(mediaRange);
+        public void Serialize<TModel>(MediaRange mediaRange, TModel model, Stream outputStream) => Serialize<TModel>(mediaRange, model, outputStream);
     }
 }

@@ -7,6 +7,7 @@
     using System.Reflection;
     using Nancy.Extensions;
     using Nancy.ModelBinding;
+    using Nancy.Responses.Negotiation;
     using Newtonsoft.Json;
 
     public class JsonNetBodyDeserializer : IBodyDeserializer
@@ -50,14 +51,14 @@
         /// <returns>Model instance</returns>
         public object Deserialize(string contentType, Stream bodyStream, BindingContext context)
         {
-            var deserializedObject = 
+            var deserializedObject =
                 this.serializer.Deserialize(new StreamReader(bodyStream), context.DestinationType);
 
-            var properties = 
+            var properties =
                 context.DestinationType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                     .Select(p => new BindingMemberInfo(p));
-            
-            var fields = 
+
+            var fields =
                 context.DestinationType.GetFields(BindingFlags.Public | BindingFlags.Instance)
                     .Select(f => new BindingMemberInfo(f));
 
@@ -105,5 +106,8 @@
         {
             property.SetValue(destinationObject, property.GetValue(sourceObject));
         }
+
+        public bool CanDeserialize(MediaRange mediaRange, BindingContext context) => Helpers.IsJsonType(mediaRange);
+        public object Deserialize(MediaRange mediaRange, Stream bodyStream, BindingContext context) => Deserialize(mediaRange, bodyStream, context);
     }
 }
