@@ -4,7 +4,7 @@
     using System.IO;
     using Nancy.IO;
     using Nancy.Responses.Negotiation;
-    using Newtonsoft.Json;
+    using Yodiwo.Json;
 
     public class JsonNetSerializer : ISerializer
     {
@@ -63,6 +63,6 @@
         }
 
         public bool CanSerialize(MediaRange mediaRange) => Helpers.IsJsonType(mediaRange);
-        public void Serialize<TModel>(MediaRange mediaRange, TModel model, Stream outputStream) => Serialize<TModel>(mediaRange, model, outputStream);
+        public void Serialize<TModel>(MediaRange mediaRange, TModel model, Stream outputStream) => Serialize<TModel>((string)mediaRange, model, outputStream);
     }
 }

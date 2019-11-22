@@ -2,11 +2,10 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
   </PropertyGroup>
-  
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\sw\ExternalsDLLs\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Yodiwo.Json">
+      <HintPath>..\..\..\..\sw\ExternalsDLLs\Yodiwo.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
-  
+
 </Project>

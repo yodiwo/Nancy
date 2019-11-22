@@ -8,7 +8,7 @@
     using Nancy.Extensions;
     using Nancy.ModelBinding;
     using Nancy.Responses.Negotiation;
-    using Newtonsoft.Json;
+    using Yodiwo.Json;
 
     public class JsonNetBodyDeserializer : IBodyDeserializer
     {
@@ -108,6 +108,6 @@
         }
 
         public bool CanDeserialize(MediaRange mediaRange, BindingContext context) => Helpers.IsJsonType(mediaRange);
-        public object Deserialize(MediaRange mediaRange, Stream bodyStream, BindingContext context) => Deserialize(mediaRange, bodyStream, context);
+        public object Deserialize(MediaRange mediaRange, Stream bodyStream, BindingContext context) => Deserialize((string)mediaRange, bodyStream, context);
     }
 }
